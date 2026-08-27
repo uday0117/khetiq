@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "181151435293",
+    "project_id": "khetiq-81f0e",
+    "storage_bucket": "khetiq-81f0e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181151435293:android:ee82b2d80e507d9bc3d4f4",
+        "android_client_info": {
+          "package_name": "com.uksolutions.khetiq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQGvFI2JtKf9NQRdY-R4sEQqR2bQPYQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
