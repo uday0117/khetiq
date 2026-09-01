@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:khetiq/core/utils/helpers.dart';
 
 import '../models/crop_model.dart';
 import '../services/crop_planner_service.dart';
@@ -34,7 +35,7 @@ class CropPlannerController extends GetxController {
         selectedCrop.value = null;
       }
     } catch (e) {
-      Get.snackbar('Error', 'Unable to load crops.');
+      showAppSnackbar('Error', 'Unable to load crops.');
     } finally {
       isLoading.value = false;
     }
@@ -83,7 +84,7 @@ class CropPlannerController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to add crop.');
+      showAppSnackbar('Error', 'Unable to add crop.');
 
       return false;
     } finally {
@@ -110,7 +111,7 @@ class CropPlannerController extends GetxController {
         cropId: cropId,
       );
     } catch (e) {
-      Get.snackbar('Error', 'Unable to load crop.');
+      showAppSnackbar('Error', 'Unable to load crop.');
     } finally {
       isLoading.value = false;
     }
@@ -139,7 +140,7 @@ class CropPlannerController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to delete crop.');
+      showAppSnackbar('Error', 'Unable to delete crop.');
 
       return false;
     } finally {
@@ -184,7 +185,7 @@ class CropPlannerController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to update crop.');
+      showAppSnackbar('Error', 'Unable to update crop.');
 
       return false;
     } finally {

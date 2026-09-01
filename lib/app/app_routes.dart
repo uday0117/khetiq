@@ -13,4 +13,8 @@ abstract class AppRoutes {
   static const addCrop = '/add-crop';
   static const cropDetails = '/crop-details';
   static const editCrop = '/edit-crop';
+  static const cropDiary = '/crop-diary';
+static const addDiaryEntry = '/add-diary-entry';
+static const diaryEntryDetails = '/diary-entry-details';
+static const editDiaryEntry = '/edit-diary-entry';
 }

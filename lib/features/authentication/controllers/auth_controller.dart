@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:khetiq/core/utils/helpers.dart';
 
 import '../services/auth_service.dart';
 
@@ -55,7 +56,7 @@ class AuthController extends GetxController {
 
       await _authService.sendPasswordResetEmail(email.trim());
 
-      Get.snackbar('Success', 'Password reset email sent.');
+      showAppSnackbar('Success', 'Password reset email sent.');
 
       return true;
     } catch (e) {
@@ -105,6 +106,6 @@ class AuthController extends GetxController {
       }
     }
 
-    Get.snackbar('Authentication Error', message);
+    showAppSnackbar('Authentication Error', message);
   }
 }

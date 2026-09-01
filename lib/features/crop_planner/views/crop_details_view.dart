@@ -28,7 +28,9 @@ class _CropDetailsViewState extends State<CropDetailsView> {
 
     controller = Get.find<CropPlannerController>();
 
-    controller.loadCrop(farmId: widget.farmId, cropId: widget.cropId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadCrop(farmId: widget.farmId, cropId: widget.cropId);
+    });
   }
 
   @override
@@ -124,6 +126,21 @@ class _CropDetailsViewState extends State<CropDetailsView> {
 
               if (crop.notes != null && crop.notes!.isNotEmpty)
                 _DetailRow(title: 'Notes', value: crop.notes!),
+
+              const SizedBox(height: 24),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    context.push(
+                      '${AppRoutes.cropDiary}/${widget.farmId}/${widget.cropId}',
+                    );
+                  },
+                  icon: const Icon(Icons.menu_book_outlined),
+                  label: const Text('Crop Diary'),
+                ),
+              ),
             ],
           ),
         );
@@ -165,7 +182,7 @@ class _CropDetailsViewState extends State<CropDetailsView> {
       cropId: cropId,
     );
 
-    if (success && mounted) {
+    if (success && context.mounted) {
       context.pop();
     }
   }

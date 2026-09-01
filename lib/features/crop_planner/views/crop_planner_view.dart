@@ -24,7 +24,9 @@ class _CropPlannerViewState extends State<CropPlannerView> {
 
     controller = Get.find<CropPlannerController>();
 
-    controller.loadCrops(widget.farmId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadCrops(widget.farmId);
+    });
   }
 
   @override

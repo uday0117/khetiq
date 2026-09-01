@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:khetiq/features/authentication/controllers/auth_controller.dart';
 
 import '../../../app/app_routes.dart';
 import '../controllers/farm_controller.dart';
@@ -12,7 +13,22 @@ class MyFarmView extends GetView<FarmController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Farm')),
+      appBar: AppBar(
+        title: const Text('My Farm'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final authController = Get.find<AuthController>();
+              await authController.logout();
+
+              if (context.mounted) {
+                context.go(AppRoutes.login);
+              }
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.push(AppRoutes.farmSetup);

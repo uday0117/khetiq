@@ -23,7 +23,9 @@ class _FarmDetailsViewState extends State<FarmDetailsView> {
 
     controller = Get.find<FarmController>();
 
-    controller.loadFarm(widget.farmId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadFarm(widget.farmId);
+    });
   }
 
   @override
@@ -101,6 +103,19 @@ class _FarmDetailsViewState extends State<FarmDetailsView> {
               _DetailRow(title: 'District', value: farm.district),
 
               _DetailRow(title: 'State', value: farm.state),
+
+              const SizedBox(height: 24),
+
+              ElevatedButton.icon(
+                onPressed: () {
+                  context.push('${AppRoutes.cropPlanner}/${farm.id}');
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: const Text('Go to Crop Planner'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                ),
+              ),
             ],
           ),
         );

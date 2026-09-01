@@ -118,7 +118,7 @@ class LoginView extends GetView<AuthController> {
                       );
 
                       if (success && context.mounted) {
-                        context.go(AppRoutes.home);
+                        context.go(AppRoutes.authCheck);
                       }
                     },
                   ),

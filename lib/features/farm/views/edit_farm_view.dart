@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../controllers/farm_controller.dart';
 
 class EditFarmView extends StatefulWidget {
@@ -25,6 +26,9 @@ class _EditFarmViewState extends State<EditFarmView> {
   late final TextEditingController stateController;
 
   late String areaUnit;
+  String? selectedState;
+  String? selectedDistrict;
+  String? selectedVillage;
 
   @override
   void initState() {
@@ -45,6 +49,9 @@ class _EditFarmViewState extends State<EditFarmView> {
     stateController = TextEditingController(text: farm.state);
 
     areaUnit = farm.areaUnit;
+    selectedState = farm.state.isNotEmpty ? farm.state : null;
+    selectedDistrict = farm.district.isNotEmpty ? farm.district : null;
+    selectedVillage = farm.village.isNotEmpty ? farm.village : null;
   }
 
   @override
@@ -120,23 +127,106 @@ class _EditFarmViewState extends State<EditFarmView> {
 
               const SizedBox(height: 20),
 
-              TextFormField(
-                controller: villageController,
-                decoration: const InputDecoration(labelText: 'Village'),
+              DropdownButtonFormField<String>(
+                initialValue: selectedState,
+                key: ValueKey('state-$selectedState'),
+                decoration: const InputDecoration(
+                  labelText: 'State',
+                  prefixIcon: Icon(Icons.map_outlined),
+                ),
+                items: () {
+                  final states = locationData.keys.toList();
+                  if (selectedState != null && selectedState!.isNotEmpty && !states.contains(selectedState)) {
+                    states.add(selectedState!);
+                  }
+                  return states.map((state) => DropdownMenuItem(value: state, child: Text(state))).toList();
+                }(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedState = value;
+                    selectedDistrict = null;
+                    selectedVillage = null;
+                    stateController.text = value ?? '';
+                    districtController.text = '';
+                    villageController.text = '';
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Select state';
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 20),
 
-              TextFormField(
-                controller: districtController,
-                decoration: const InputDecoration(labelText: 'District'),
+              DropdownButtonFormField<String>(
+                initialValue: selectedDistrict,
+                key: ValueKey('district-$selectedState-$selectedDistrict'),
+                disabledHint: const Text('Select a state first'),
+                decoration: const InputDecoration(
+                  labelText: 'District',
+                  prefixIcon: Icon(Icons.location_city),
+                ),
+                items: () {
+                  if (selectedState == null) return <DropdownMenuItem<String>>[];
+                  final districts = locationData[selectedState]?.keys.toList() ?? <String>[];
+                  if (selectedDistrict != null && selectedDistrict!.isNotEmpty && !districts.contains(selectedDistrict)) {
+                    districts.add(selectedDistrict!);
+                  }
+                  return districts.map((district) => DropdownMenuItem(value: district, child: Text(district))).toList();
+                }(),
+                onChanged: selectedState == null
+                    ? null
+                    : (value) {
+                        setState(() {
+                          selectedDistrict = value;
+                          selectedVillage = null;
+                          districtController.text = value ?? '';
+                          villageController.text = '';
+                        });
+                      },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Select district';
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 20),
 
-              TextFormField(
-                controller: stateController,
-                decoration: const InputDecoration(labelText: 'State'),
+              DropdownButtonFormField<String>(
+                initialValue: selectedVillage,
+                key: ValueKey('village-$selectedState-$selectedDistrict-$selectedVillage'),
+                disabledHint: const Text('Select a district first'),
+                decoration: const InputDecoration(
+                  labelText: 'Village',
+                  prefixIcon: Icon(Icons.location_on_outlined),
+                ),
+                items: () {
+                  if (selectedState == null || selectedDistrict == null) return <DropdownMenuItem<String>>[];
+                  final villages = locationData[selectedState]?[selectedDistrict]?.toList() ?? <String>[];
+                  if (selectedVillage != null && selectedVillage!.isNotEmpty && !villages.contains(selectedVillage)) {
+                    villages.add(selectedVillage!);
+                  }
+                  return villages.map((village) => DropdownMenuItem(value: village, child: Text(village))).toList();
+                }(),
+                onChanged: selectedDistrict == null
+                    ? null
+                    : (value) {
+                        setState(() {
+                          selectedVillage = value;
+                          villageController.text = value ?? '';
+                        });
+                      },
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Select village';
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 40),

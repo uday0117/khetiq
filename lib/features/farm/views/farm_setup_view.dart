@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
+import '../../../core/constants/app_constants.dart';
 import '../controllers/farm_controller.dart';
 
 class FarmSetupView extends GetView<FarmController> {
@@ -17,6 +18,9 @@ class FarmSetupView extends GetView<FarmController> {
   final stateController = TextEditingController();
 
   final selectedAreaUnit = 'acres'.obs;
+  final selectedState = Rxn<String>();
+  final selectedDistrict = Rxn<String>();
+  final selectedVillage = Rxn<String>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,52 +117,106 @@ class FarmSetupView extends GetView<FarmController> {
 
                 const SizedBox(height: 20),
 
-                TextFormField(
-                  controller: villageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Village',
-                    prefixIcon: Icon(Icons.location_on_outlined),
+                Obx(
+                  () => DropdownButtonFormField<String>(
+                    initialValue: selectedState.value,
+                    key: ValueKey('state-${selectedState.value}'),
+                    decoration: const InputDecoration(
+                      labelText: 'State',
+                      prefixIcon: Icon(Icons.map_outlined),
+                    ),
+                    items: locationData.keys.map((state) {
+                      return DropdownMenuItem(value: state, child: Text(state));
+                    }).toList(),
+                    onChanged: (value) {
+                      selectedState.value = value;
+                      selectedDistrict.value = null;
+                      selectedVillage.value = null;
+                      stateController.text = value ?? '';
+                      districtController.text = '';
+                      villageController.text = '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Select state';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Enter village';
-                    }
+                ),
 
-                    return null;
+                const SizedBox(height: 20),
+
+                Obx(
+                  () {
+                    final state = selectedState.value;
+                    final districts = state != null ? locationData[state]?.keys.toList() ?? [] : <String>[];
+                    return DropdownButtonFormField<String>(
+                      initialValue: selectedDistrict.value,
+                      key: ValueKey('district-${selectedState.value}-${selectedDistrict.value}'),
+                      disabledHint: const Text('Select a state first'),
+                      decoration: const InputDecoration(
+                        labelText: 'District',
+                        prefixIcon: Icon(Icons.location_city),
+                      ),
+                      items: districts.map((district) {
+                        return DropdownMenuItem(value: district, child: Text(district));
+                      }).toList(),
+                      onChanged: state == null
+                          ? null
+                          : (value) {
+                              selectedDistrict.value = value;
+                              selectedVillage.value = null;
+                              districtController.text = value ?? '';
+                              villageController.text = '';
+                            },
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Select district';
+                        }
+                        return null;
+                      },
+                    );
                   },
                 ),
 
                 const SizedBox(height: 20),
 
-                TextFormField(
-                  controller: districtController,
-                  decoration: const InputDecoration(
-                    labelText: 'District',
-                    prefixIcon: Icon(Icons.location_city),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Enter district';
+                Obx(
+                  () {
+                    final state = selectedState.value;
+                    final district = selectedDistrict.value;
+                    List<String> villages = [];
+                    if (state != null && district != null) {
+                      final districtsMap = locationData[state];
+                      if (districtsMap != null) {
+                        villages = districtsMap[district] ?? [];
+                      }
                     }
-
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-                TextFormField(
-                  controller: stateController,
-                  decoration: const InputDecoration(
-                    labelText: 'State',
-                    prefixIcon: Icon(Icons.map_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Enter state';
-                    }
-
-                    return null;
+                    return DropdownButtonFormField<String>(
+                      initialValue: selectedVillage.value,
+                      key: ValueKey('village-${selectedState.value}-${selectedDistrict.value}-${selectedVillage.value}'),
+                      disabledHint: const Text('Select a district first'),
+                      decoration: const InputDecoration(
+                        labelText: 'Village',
+                        prefixIcon: Icon(Icons.location_on_outlined),
+                      ),
+                      items: villages.map((village) {
+                        return DropdownMenuItem(value: village, child: Text(village));
+                      }).toList(),
+                      onChanged: district == null
+                          ? null
+                          : (value) {
+                              selectedVillage.value = value;
+                              villageController.text = value ?? '';
+                            },
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Select village';
+                        }
+                        return null;
+                      },
+                    );
                   },
                 ),
 

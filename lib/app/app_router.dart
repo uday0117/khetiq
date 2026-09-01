@@ -1,5 +1,11 @@
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:khetiq/features/authentication/views/auth_check_view.dart';
+import 'package:khetiq/features/crop_diary/bindings/crop_diary_binding.dart';
+import 'package:khetiq/features/crop_diary/views/add_diary_entry_view.dart';
+import 'package:khetiq/features/crop_diary/views/crop_diary_view.dart';
+import 'package:khetiq/features/crop_diary/views/diary_entry_details_view.dart';
+import 'package:khetiq/features/crop_diary/views/edit_diary_entry_view.dart';
 import 'package:khetiq/features/crop_planner/bindings/crop_planner_binding.dart';
 import 'package:khetiq/features/crop_planner/views/add_crop_view.dart';
 import 'package:khetiq/features/crop_planner/views/crop_details_view.dart';
@@ -21,6 +27,7 @@ import 'app_routes.dart';
 
 class AppRouter {
   static final router = GoRouter(
+    navigatorKey: Get.key,
     initialLocation: AppRoutes.authCheck,
     routes: [
       GoRoute(
@@ -143,6 +150,71 @@ class AppRouter {
           return EditCropView(farmId: farmId, cropId: cropId);
         },
       ),
+
+
+      GoRoute(
+  path: '${AppRoutes.cropDiary}/:farmId/:cropId',
+  builder: (context, state) {
+    CropDiaryBinding().dependencies();
+
+    final farmId = state.pathParameters['farmId']!;
+    final cropId = state.pathParameters['cropId']!;
+
+    return CropDiaryView(
+      farmId: farmId,
+      cropId: cropId,
+    );
+  },
+),
+
+GoRoute(
+  path: '${AppRoutes.addDiaryEntry}/:farmId/:cropId',
+  builder: (context, state) {
+    CropDiaryBinding().dependencies();
+
+    final farmId = state.pathParameters['farmId']!;
+    final cropId = state.pathParameters['cropId']!;
+
+    return AddDiaryEntryView(
+      farmId: farmId,
+      cropId: cropId,  
+    );
+  },
+),
+
+GoRoute(
+  path: '${AppRoutes.diaryEntryDetails}/:farmId/:cropId/:entryId',
+  builder: (context, state) {
+    CropDiaryBinding().dependencies();
+
+    final farmId = state.pathParameters['farmId']!;
+    final cropId = state.pathParameters['cropId']!;
+    final entryId = state.pathParameters['entryId']!;
+
+    return DiaryEntryDetailsView(
+      farmId: farmId,
+      cropId: cropId,
+      entryId: entryId,
+    );
+  },
+),
+
+GoRoute(
+  path: '${AppRoutes.editDiaryEntry}/:farmId/:cropId/:entryId',
+  builder: (context, state) {
+    CropDiaryBinding().dependencies();
+
+    final farmId = state.pathParameters['farmId']!;
+    final cropId = state.pathParameters['cropId']!;
+    final entryId = state.pathParameters['entryId']!;
+
+    return EditDiaryEntryView(
+      farmId: farmId,
+      cropId: cropId,
+      entryId: entryId,
+    );
+  },
+),
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) {

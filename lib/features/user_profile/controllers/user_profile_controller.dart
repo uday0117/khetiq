@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:khetiq/core/utils/helpers.dart';
 
 import '../models/user_profile_model.dart';
 import '../services/user_profile_service.dart';
@@ -20,7 +21,7 @@ class UserProfileController extends GetxController {
       final user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-        Get.snackbar('Error', 'User is not logged in.');
+        showAppSnackbar('Error', 'User is not logged in.');
 
         return false;
       }
@@ -39,7 +40,7 @@ class UserProfileController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to save your profile.');
+        showAppSnackbar('Error', 'Unable to save your profile.');
 
       return false;
     } finally {

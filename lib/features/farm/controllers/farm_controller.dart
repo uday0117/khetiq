@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:khetiq/core/utils/helpers.dart';
 
 import '../models/farm_model.dart';
 import '../services/farm_service.dart';
@@ -10,6 +12,12 @@ class FarmController extends GetxController {
   final isLoading = false.obs;
   final farms = <FarmModel>[].obs;
   final selectedFarm = Rxn<FarmModel>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadFarms();
+  }
 
   User? get currentUser {
     return FirebaseAuth.instance.currentUser;
@@ -29,7 +37,7 @@ class FarmController extends GetxController {
       final user = currentUser;
 
       if (user == null) {
-        Get.snackbar('Error', 'You are not logged in.');
+        showAppSnackbar('Error', 'You are not logged in.');
 
         return false;
       }
@@ -56,7 +64,7 @@ class FarmController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to save your farm.');
+      showAppSnackbar('Error', 'Unable to save your farm.');
 
       return false;
     } finally {
@@ -83,7 +91,7 @@ class FarmController extends GetxController {
         selectedFarm.value = farms.first;
       }
     } catch (e) {
-      Get.snackbar('Error', 'Unable to load your farms.');
+      showAppSnackbar('Error', 'Unable to load your farms.');
     } finally {
       isLoading.value = false;
     }
@@ -103,7 +111,8 @@ class FarmController extends GetxController {
 
       selectedFarm.value = farm;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to load farm details.');
+      debugPrint('Error loading farm details: $e');
+      showAppSnackbar('Error', 'Unable to load farm details: $e');
     } finally {
       isLoading.value = false;
     }
@@ -127,11 +136,8 @@ class FarmController extends GetxController {
         return false;
       }
 
-      final existingFarm = selectedFarm.value;
-
-      if (existingFarm == null) {
-        return false;
-      }
+      final existingFarmIndex = farms.indexWhere((item) => item.id == id);
+      final FarmModel? existingFarm = existingFarmIndex != -1 ? farms[existingFarmIndex] : selectedFarm.value;
 
       final farm = FarmModel(
         id: id,
@@ -141,7 +147,7 @@ class FarmController extends GetxController {
         village: village.trim(),
         district: district.trim(),
         state: state.trim(),
-        createdAt: existingFarm.createdAt,
+        createdAt: existingFarm?.createdAt ?? DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
@@ -157,7 +163,8 @@ class FarmController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to update your farm.');
+      debugPrint('Error updating farm: $e');
+      showAppSnackbar('Error', 'Unable to update your farm: $e');
 
       return false;
     } finally {
@@ -185,7 +192,7 @@ class FarmController extends GetxController {
 
       return true;
     } catch (e) {
-      Get.snackbar('Error', 'Unable to delete your farm.');
+      showAppSnackbar('Error', 'Unable to delete your farm.');
 
       return false;
     } finally {
