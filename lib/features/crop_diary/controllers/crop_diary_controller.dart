@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:khetiq/core/utils/helpers.dart';
 
 import '../models/diary_entry_model.dart';
 import '../services/crop_diary_service.dart';
@@ -33,7 +32,7 @@ class CropDiaryController extends GetxController {
       final user = currentUser;
 
       if (user == null) {
-        showAppSnackbar(
+        Get.snackbar(
           'Error',
           'You are not logged in.',
         );
@@ -63,17 +62,16 @@ class CropDiaryController extends GetxController {
       );
 
       entries.insert(0, entry);
-      entries.sort((a, b) => b.date.compareTo(a.date));
       selectedEntry.value = entry;
 
-      showAppSnackbar(
+      Get.snackbar(
         'Success',
         'Diary entry added successfully.',
       );
 
       return true;
     } catch (e) {
-      showAppSnackbar(
+      Get.snackbar(
         'Error',
         'Unable to save diary entry.',
       );
@@ -107,7 +105,7 @@ class CropDiaryController extends GetxController {
 
       entries.assignAll(result);
     } catch (e) {
-      showAppSnackbar(
+      Get.snackbar(
         'Error',
         'Unable to load diary entries.',
       );
@@ -125,11 +123,6 @@ class CropDiaryController extends GetxController {
     try {
       isLoading.value = true;
 
-      if (selectedEntry.value?.id != entryId) {
-        final cached = entries.firstWhereOrNull((e) => e.id == entryId);
-        selectedEntry.value = cached;
-      }
-
       final user = currentUser;
 
       if (user == null) {
@@ -146,7 +139,7 @@ class CropDiaryController extends GetxController {
 
       selectedEntry.value = entry;
     } catch (e) {
-      showAppSnackbar(
+      Get.snackbar(
         'Error',
         'Unable to load diary entry.',
       );
@@ -204,19 +197,18 @@ class CropDiaryController extends GetxController {
 
       if (index != -1) {
         entries[index] = updatedEntry;
-        entries.sort((a, b) => b.date.compareTo(a.date));
       }
 
       selectedEntry.value = updatedEntry;
 
-      showAppSnackbar(
+      Get.snackbar(
         'Success',
         'Diary entry updated successfully.',
       );
 
       return true;
     } catch (e) {
-      showAppSnackbar(
+      Get.snackbar(
         'Error',
         'Unable to update diary entry.',
       );
@@ -257,14 +249,14 @@ class CropDiaryController extends GetxController {
         selectedEntry.value = null;
       }
 
-      showAppSnackbar(
+      Get.snackbar(
         'Success',
         'Diary entry deleted successfully.',
       );
 
       return true;
     } catch (e) {
-      showAppSnackbar(
+      Get.snackbar(
         'Error',
         'Unable to delete diary entry.',
       );

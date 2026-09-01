@@ -30,12 +30,10 @@ class _CropDiaryViewState extends State<CropDiaryView> {
 
     controller = Get.find<CropDiaryController>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadEntries(
-        farmId: widget.farmId,
-        cropId: widget.cropId,
-      );
-    });
+    controller.loadEntries(
+      farmId: widget.farmId,
+      cropId: widget.cropId,
+    );
   }
 
   @override

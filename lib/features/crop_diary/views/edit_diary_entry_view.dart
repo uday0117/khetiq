@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 
 import '../controllers/crop_diary_controller.dart';
-import '../models/diary_entry_model.dart';
 
 class EditDiaryEntryView extends StatefulWidget {
   final String farmId;
@@ -52,13 +50,11 @@ class _EditDiaryEntryViewState extends State<EditDiaryEntryView> {
 
     controller = Get.find<CropDiaryController>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadEntry(
-        farmId: widget.farmId,
-        cropId: widget.cropId,
-        entryId: widget.entryId,
-      );
-    });
+    controller.loadEntry(
+      farmId: widget.farmId,
+      cropId: widget.cropId,
+      entryId: widget.entryId,
+    );
   }
 
   @override
@@ -68,8 +64,10 @@ class _EditDiaryEntryViewState extends State<EditDiaryEntryView> {
     super.dispose();
   }
 
-  void _loadFormData(DiaryEntryModel entry) {
-    if (_formLoaded || entry.id != widget.entryId) {
+  void _loadFormData() {
+    final entry = controller.selectedEntry.value;
+
+    if (entry == null || _formLoaded) {
       return;
     }
 
@@ -112,10 +110,8 @@ class _EditDiaryEntryViewState extends State<EditDiaryEntryView> {
       date: selectedDate,
     );
 
-    if (!mounted) return;
-
-    if (success) {
-      context.pop();
+    if (success && mounted) {
+      Get.back();
     }
   }
 
@@ -126,22 +122,22 @@ class _EditDiaryEntryViewState extends State<EditDiaryEntryView> {
         title: const Text('Edit Diary Entry'),
       ),
       body: Obx(() {
-        final entry = controller.selectedEntry.value;
-
         if (controller.isLoading.value &&
-            (entry == null || entry.id != widget.entryId)) {
+            controller.selectedEntry.value == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
-        if (entry == null || entry.id != widget.entryId) {
+        final entry = controller.selectedEntry.value;
+
+        if (entry == null) {
           return const Center(
             child: Text('Diary entry not found'),
           );
         }
 
-        _loadFormData(entry);
+        _loadFormData();
 
         return Form(
           key: formKey,
@@ -167,7 +163,7 @@ class _EditDiaryEntryViewState extends State<EditDiaryEntryView> {
               const SizedBox(height: 20),
 
               DropdownButtonFormField<String>(
-                initialValue: entryTypes.contains(selectedType)
+                value: entryTypes.contains(selectedType)
                     ? selectedType
                     : 'other',
                 decoration: const InputDecoration(

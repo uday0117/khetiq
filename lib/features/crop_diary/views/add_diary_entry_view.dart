@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 
 import '../controllers/crop_diary_controller.dart';
 
@@ -83,10 +82,8 @@ class _AddDiaryEntryViewState extends State<AddDiaryEntryView> {
       date: selectedDate,
     );
 
-    if (!mounted) return;
-
-    if (success) {
-      context.pop();
+    if (success && mounted) {
+      Get.back();
     }
   }
 
@@ -121,7 +118,7 @@ class _AddDiaryEntryViewState extends State<AddDiaryEntryView> {
             const SizedBox(height: 20),
 
             DropdownButtonFormField<String>(
-              initialValue: selectedType,
+              value: selectedType,
               decoration: const InputDecoration(
                 labelText: 'Entry Type',
                 border: OutlineInputBorder(),

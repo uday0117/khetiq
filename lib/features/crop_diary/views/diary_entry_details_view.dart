@@ -33,13 +33,11 @@ class _DiaryEntryDetailsViewState
 
     controller = Get.find<CropDiaryController>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadEntry(
-        farmId: widget.farmId,
-        cropId: widget.cropId,
-        entryId: widget.entryId,
-      );
-    });
+    controller.loadEntry(
+      farmId: widget.farmId,
+      cropId: widget.cropId,
+      entryId: widget.entryId,
+    );
   }
 
   @override
@@ -159,7 +157,9 @@ class _DiaryEntryDetailsViewState
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: _confirmDelete,
+                  onPressed: () {
+                    _confirmDelete(context);
+                  },
                   icon: const Icon(Icons.delete_outline),
                   label: const Text('Delete Entry'),
                 ),
@@ -171,7 +171,7 @@ class _DiaryEntryDetailsViewState
     );
   }
 
-  Future<void> _confirmDelete() async {
+  Future<void> _confirmDelete(BuildContext context) async {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
@@ -208,9 +208,7 @@ class _DiaryEntryDetailsViewState
       entryId: widget.entryId,
     );
 
-    if (!mounted) return;
-
-    if (success) {
+    if (success && mounted) {
       context.pop();
     }
   }

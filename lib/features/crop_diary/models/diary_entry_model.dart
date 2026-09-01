@@ -38,10 +38,11 @@ class DiaryEntryModel {
     Map<String, dynamic> map,
   ) {
     return DiaryEntryModel(
-      id: map['id']?.toString() ?? '',
-      cropId: map['cropId']?.toString() ?? '',
+      id: map['id'] as String,
+      cropId: map['cropId'] as String,
       title: map['title'] as String? ?? '',
-      description: map['description'] as String? ?? '',
+      description:
+          map['description'] as String? ?? '',
       type: map['type'] as String? ?? 'other',
       date: _parseDate(map['date']),
       createdAt: _parseDate(map['createdAt']),

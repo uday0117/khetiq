@@ -11,6 +11,7 @@ import 'package:khetiq/features/crop_planner/views/add_crop_view.dart';
 import 'package:khetiq/features/crop_planner/views/crop_details_view.dart';
 import 'package:khetiq/features/crop_planner/views/crop_planner_view.dart';
 import 'package:khetiq/features/crop_planner/views/edit_crop_view.dart';
+
 import 'package:khetiq/features/farm/bindings/farm_binding.dart';
 import 'package:khetiq/features/farm/views/edit_farm_view.dart';
 import 'package:khetiq/features/farm/views/farm_details_view.dart';
@@ -18,6 +19,10 @@ import 'package:khetiq/features/farm/views/farm_setup_view.dart';
 import 'package:khetiq/features/farm/views/my_farm_view.dart';
 import 'package:khetiq/features/user_profile/bindings/user_profile_binding.dart';
 import 'package:khetiq/features/user_profile/views/profile_setup_view.dart';
+
+import 'package:khetiq/features/crop_scan/bindings/crop_scan_binding.dart';
+import 'package:khetiq/features/crop_scan/views/crop_scan_result_view.dart';
+import 'package:khetiq/features/crop_scan/views/crop_scan_view.dart';
 
 import '../features/authentication/views/forgot_password_view.dart';
 import '../features/authentication/views/login_view.dart';
@@ -215,6 +220,25 @@ GoRoute(
     );
   },
 ),
+
+
+
+
+      GoRoute(
+        path: AppRoutes.cropScan,
+        builder: (context, state) {
+          CropScanBinding().dependencies();
+          return const CropScanView();
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.cropScanResult,
+        builder: (context, state) {
+          return const CropScanResultView();
+        },
+      ),
+
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) {

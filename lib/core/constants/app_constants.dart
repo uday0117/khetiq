@@ -30,3 +30,11 @@ const Map<String, Map<String, List<String>>> locationData = {
     'Jabalpur': ['Sihora', 'Patan', 'Shahpura', 'Kundam', 'Panagar'],
   },
 };
+
+/// Gemini API Key configuration for AI Crop Scan (Free Tier)
+/// Pass via `--dart-define=GEMINI_API_KEY=your_key_here`
+const String geminiApiKey = String.fromEnvironment(
+  'GEMINI_API_KEY',
+  defaultValue: '',
+);
+
